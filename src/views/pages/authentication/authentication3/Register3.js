@@ -25,7 +25,7 @@ const Register = () => {
                                 <Grid container spacing={2} alignItems="center" justifyContent="center">
                                     <Grid item sx={{ mb: 3 }}>
                                         <Link to="#">
-                                            <img src={Logo} alt="Notification" />
+                                            <img src={Logo} alt="Notification" width="150px" />
                                         </Link>
                                     </Grid>
                                     <Grid item xs={12}>
@@ -34,26 +34,7 @@ const Register = () => {
                                             direction={matchDownSM ? 'column-reverse' : 'row'}
                                             alignItems="center"
                                             justifyContent="center"
-                                        >
-                                            <Grid item>
-                                                <Stack alignItems="center" justifyContent="center" spacing={1}>
-                                                    <Typography
-                                                        color={theme.palette.secondary.main}
-                                                        gutterBottom
-                                                        variant={matchDownSM ? 'h3' : 'h2'}
-                                                    >
-                                                        Sign up
-                                                    </Typography>
-                                                    <Typography
-                                                        variant="caption"
-                                                        fontSize="16px"
-                                                        textAlign={matchDownSM ? 'center' : 'inherit'}
-                                                    >
-                                                        Enter your credentials to continue
-                                                    </Typography>
-                                                </Stack>
-                                            </Grid>
-                                        </Grid>
+                                        ></Grid>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <AuthRegister />
@@ -69,7 +50,7 @@ const Register = () => {
                                                 variant="subtitle1"
                                                 sx={{ textDecoration: 'none' }}
                                             >
-                                                Already have an account?
+                                                Já Possui Conta?
                                             </Typography>
                                         </Grid>
                                     </Grid>

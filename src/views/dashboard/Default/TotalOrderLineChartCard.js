@@ -167,18 +167,6 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                                                     </Typography>
                                                 )}
                                             </Grid> */}
-                                            <Grid item>
-                                                <Avatar
-                                                    sx={{
-                                                        ...theme.typography.smallAvatar,
-                                                        cursor: 'pointer',
-                                                        backgroundColor: theme.palette.primary[200],
-                                                        color: theme.palette.primary.dark
-                                                    }}
-                                                >
-                                                    <ArrowDownwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
-                                                </Avatar>
-                                            </Grid>
                                             <Grid item xs={12}>
                                                 <Typography
                                                     sx={{

@@ -15,7 +15,7 @@ const other = {
             id: 'sample-page',
             title: 'Criar',
             type: 'item',
-            url: '/sample-page',
+            url: '/create-routes',
             icon: icons.IconRoute,
             breadcrumbs: false
         },
@@ -23,10 +23,9 @@ const other = {
             id: 'documentation',
             title: 'Listar',
             type: 'item',
-            url: '/',
+            url: '/list-routes',
             icon: icons.IconRoute,
-            external: true,
-            target: true
+            breadcrumbs: false
         }
     ]
 };

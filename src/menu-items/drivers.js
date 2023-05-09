@@ -20,13 +20,12 @@ const drivers = {
             breadcrumbs: false
         },
         {
-            id: 'documentation',
-            title: 'Buscar',
+            id: 'drivers',
+            title: 'Listar',
             type: 'item',
-            url: 'https://codedthemes.gitbook.io/berry/',
+            url: '/drivers',
             icon: icons.IconUserSearch,
-            external: true,
-            target: true
+            breadcrumbs: false
         }
     ]
 };

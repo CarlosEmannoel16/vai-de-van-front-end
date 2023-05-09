@@ -4,6 +4,8 @@ import Loadable from 'ui-component/Loadable';
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const AddDrivers = Loadable(lazy(() => import('views/driver/addDriver')));
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
+const ListDrivers = Loadable(lazy(() => import('views/driver/listDrivers')));
+const ListRoutes = Loadable(lazy(() => import('views/routes/ListRoutes')));
 
 const MainRoutes = {
     path: '/',
@@ -18,6 +20,10 @@ const MainRoutes = {
             element: <AddDrivers />
         },
         {
+            path: '/drivers',
+            element: <ListDrivers />
+        },
+        {
             path: 'dashboard',
             children: [
                 {
@@ -28,8 +34,8 @@ const MainRoutes = {
         },
 
         {
-            path: 'sample-page',
-            element: <SamplePage />
+            path: '/list-routes',
+            element: <ListRoutes />
         }
     ]
 };
