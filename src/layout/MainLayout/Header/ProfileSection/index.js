@@ -38,6 +38,9 @@ import User1 from 'assets/images/users/user-round.svg';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUserPlus } from '@tabler/icons';
+import { setLogoutLocal } from 'helpers/logout';
+import { getUserNameLocal } from 'helpers/localStorage';
+import { ComponentAdmPrivate } from 'views/componentsPrivates';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -46,17 +49,15 @@ const ProfileSection = () => {
     const customization = useSelector((state) => state.customization);
     const navigate = useNavigate();
 
-    const [sdm, setSdm] = useState(true);
+    const [nameUser, setNameUser] = useState('');
     const [value, setValue] = useState('');
-    const [notification, setNotification] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [open, setOpen] = useState(false);
-    /**
-     * anchorRef is used on different componets and specifying one type leads to other components throwing an error
-     * */
+
     const anchorRef = useRef(null);
     const handleLogout = async () => {
-        navigate('/pages/login/login3');
+        setLogoutLocal();
+        navigate('/login/adm');
     };
 
     const handleClose = (event) => {
@@ -76,6 +77,7 @@ const ProfileSection = () => {
     };
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
+        setNameUser(getUserNameLocal());
     };
 
     const prevOpen = useRef(open);
@@ -159,7 +161,7 @@ const ProfileSection = () => {
                                             <Stack direction="row" spacing={0.5} alignItems="center">
                                                 <Typography variant="h4">Bom dia,</Typography>
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    Emannoel
+                                                    {nameUser}
                                                 </Typography>
                                             </Stack>
                                         </Stack>
@@ -211,24 +213,27 @@ const ProfileSection = () => {
                                                         primary={<Typography variant="body2">Configurações da conta</Typography>}
                                                     />
                                                 </ListItemButton>
-                                                <ListItemButton
-                                                    sx={{ borderRadius: `${customization.borderRadius}px` }}
-                                                    selected={selectedIndex === 1}
-                                                    onClick={(event) => handleListItemClick(event, 1, '/user/social-profile/posts')}
-                                                >
-                                                    <ListItemIcon>
-                                                        <IconUserPlus stroke={1.5} size="1.3rem" />
-                                                    </ListItemIcon>
-                                                    <ListItemText
-                                                        primary={
-                                                            <Grid container spacing={1} justifyContent="space-between">
-                                                                <Grid item>
-                                                                    <Typography variant="body2">Novo Adm</Typography>
+                                                <ComponentAdmPrivate>
+                                                    <ListItemButton
+                                                        sx={{ borderRadius: `${customization.borderRadius}px` }}
+                                                        selected={selectedIndex === 1}
+                                                        onClick={(event) => handleListItemClick(event, 1, '/user/social-profile/posts')}
+                                                    >
+                                                        <ListItemIcon>
+                                                            <IconUserPlus stroke={1.5} size="1.3rem" />
+                                                        </ListItemIcon>
+
+                                                        <ListItemText
+                                                            primary={
+                                                                <Grid container spacing={1} justifyContent="space-between">
+                                                                    <Grid item>
+                                                                        <Typography variant="body2">Novo Adm</Typography>
+                                                                    </Grid>
                                                                 </Grid>
-                                                            </Grid>
-                                                        }
-                                                    />
-                                                </ListItemButton>
+                                                            }
+                                                        />
+                                                    </ListItemButton>
+                                                </ComponentAdmPrivate>
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 4}

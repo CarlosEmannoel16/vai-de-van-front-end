@@ -1,11 +1,5 @@
-// assets
 import { IconUserSearch, IconUserPlus } from '@tabler/icons';
-
-// constant
 const icons = { IconUserSearch, IconUserPlus };
-
-// ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
-
 const drivers = {
     id: 'sample-docs-roadmap',
     type: 'group',

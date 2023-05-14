@@ -1,13 +1,4 @@
-// assets
-import { IconKey } from '@tabler/icons';
-
-// constant
-const icons = {
-    IconKey
-};
-
-// ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
-
+import { IconReport } from '@tabler/icons';
 const pages = {
     id: 'pages',
     title: '',
@@ -16,31 +7,22 @@ const pages = {
     children: [
         {
             id: 'authentication',
-            title: 'Authentication',
+            title: 'Relatórios',
             type: 'collapse',
-            icon: icons.IconKey,
+            icon: IconReport,
 
             children: [
                 {
-                    id: 'login3',
-                    title: 'Relatório',
+                    id: 'login',
+                    title: 'Rotas',
                     type: 'item',
-                    url: '/pages/login/login3',
-                    target: true
+                    url: '/'
                 },
                 {
-                    id: 'login3',
-                    title: 'Login',
+                    id: 'login',
+                    title: 'Motorista',
                     type: 'item',
-                    url: '/pages/login/login3',
-                    target: true
-                },
-                {
-                    id: 'register3',
-                    title: 'Register',
-                    type: 'item',
-                    url: '/pages/register/register3',
-                    target: true
+                    url: '/'
                 }
             ]
         }

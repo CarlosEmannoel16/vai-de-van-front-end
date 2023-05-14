@@ -1,9 +1,9 @@
 import { lazy } from 'react';
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
+import RoutesPrivate from './PrivateRoutes';
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
-const AddDrivers = Loadable(lazy(() => import('views/driver/addDriver')));
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
+const AddDrivers = Loadable(lazy(async () => import('views/driver/addDriver')));
 const ListDrivers = Loadable(lazy(() => import('views/driver/listDrivers')));
 const ListRoutes = Loadable(lazy(() => import('views/routes/ListRoutes')));
 
@@ -13,29 +13,59 @@ const MainRoutes = {
     children: [
         {
             path: '/',
-            element: <DashboardDefault />
+            element: (
+                <RoutesPrivate>
+                    <DashboardDefault />
+                </RoutesPrivate>
+            )
         },
         {
             path: '/add-driver',
-            element: <AddDrivers />
+            element: (
+                <RoutesPrivate>
+                    <AddDrivers />
+                </RoutesPrivate>
+            )
         },
         {
+            path: '/add-driver/:idUser',
+            element: (
+                <RoutesPrivate>
+                    <AddDrivers />
+                </RoutesPrivate>
+            )
+        },
+
+        {
             path: '/drivers',
-            element: <ListDrivers />
+            element: (
+                <RoutesPrivate>
+                    <ListDrivers />
+                </RoutesPrivate>
+            )
         },
         {
             path: 'dashboard',
             children: [
                 {
                     path: 'default',
-                    element: <DashboardDefault />
+                    element: (
+                        <RoutesPrivate>
+                            <DashboardDefault />
+                        </RoutesPrivate>
+                    )
                 }
             ]
         },
 
         {
             path: '/list-routes',
-            element: <ListRoutes />
+            element: (
+                <RoutesPrivate>
+                    {' '}
+                    <ListRoutes />
+                </RoutesPrivate>
+            )
         }
     ]
 };

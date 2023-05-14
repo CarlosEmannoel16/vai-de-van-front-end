@@ -37,8 +37,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     }
 }));
 
-// ==============================|| DASHBOARD - TOTAL INCOME LIGHT CARD ||============================== //
-
 const TotalIncomeLightCard = ({ isLoading }) => {
     const theme = useTheme();
 

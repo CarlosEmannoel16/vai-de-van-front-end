@@ -1,5 +1,3 @@
-// ===========================|| DASHBOARD - TOTAL GROWTH BAR CHART ||=========================== //
-
 const chartData = {
     height: 480,
     type: 'bar',
@@ -34,7 +32,7 @@ const chartData = {
         },
         xaxis: {
             type: 'category',
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            categories: ['Jan', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
         },
         legend: {
             show: true,

@@ -4,12 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 // material-ui
 import { ButtonBase } from '@mui/material';
 
-// project imports
 import config from 'config';
 import { MENU_OPEN } from 'store/actions';
 import Logo from '../../../assets/images/logo-horizontal.png';
-
-// ==============================|| MAIN LOGO ||============================== //
 
 const LogoSection = () => {
     const defaultId = useSelector((state) => state.customization.defaultId);

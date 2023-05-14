@@ -1,22 +1,24 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
-// material-ui
 import { styled, useTheme } from '@mui/material/styles';
 import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
 
-// project imports
 import Breadcrumbs from 'ui-component/extended/Breadcrumbs';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import navigation from 'menu-items';
+import { getMenuItemsAdm, getMenuItemsDriver } from 'menu-items';
 import { drawerWidth } from 'store/constant';
 import { SET_MENU } from 'store/actions';
 
-// assets
+//
 import { IconChevronRight } from '@tabler/icons';
+import { useState } from 'react';
+import { userService } from 'services/driver';
+import { getUserIdLocal } from 'helpers/localStorage';
+import Loader from 'ui-component/Loader';
+import { useEffect } from 'react';
 
-// styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
     ...theme.typography.mainContent,
     ...(!open && {
@@ -60,19 +62,39 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
     })
 }));
 
-// ==============================|| MAIN LAYOUT ||============================== //
-
 const MainLayout = () => {
+    const navigate = useNavigate();
+
+    const [navigation, setNavegation] = useState();
+    const [load, setLoad] = useState(true);
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-    // Handle left drawer
     const leftDrawerOpened = useSelector((state) => state.customization.opened);
     const dispatch = useDispatch();
     const handleLeftDrawerToggle = () => {
         dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
     };
 
-    return (
+    useEffect(() => {
+        userService
+            .getById(getUserIdLocal())
+            .then((result) => {
+                if (result.data.data.type === 'ADM') {
+                    console.log('isAdm');
+                    setNavegation(getMenuItemsAdm());
+                    setLoad(false);
+                } else {
+                    console.log('isDriver');
+                    setNavegation(getMenuItemsDriver());
+                    setLoad(false);
+                }
+            })
+            .catch((err) => {
+                navigate('/login/adm');
+            });
+    }, []);
+
+    return !load ? (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             {/* header */}
@@ -101,6 +123,8 @@ const MainLayout = () => {
                 <Outlet />
             </Main>
         </Box>
+    ) : (
+        <Loader />
     );
 };
 

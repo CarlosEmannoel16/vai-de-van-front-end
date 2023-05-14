@@ -1,27 +1,51 @@
-// material-ui
 import { Typography } from '@mui/material';
-
-// project imports
 import NavGroup from './NavGroup';
-import menuItem from 'menu-items';
-
-// ==============================|| SIDEBAR MENU LIST ||============================== //
+import { getMenuItemsAdm, getMenuItemsDriver } from 'menu-items';
+import { getUserIdLocal } from 'helpers/localStorage';
+import { userService } from 'services/driver';
+import Loader from 'ui-component/Loader';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const MenuList = () => {
-    const navItems = menuItem.items.map((item) => {
-        switch (item.type) {
-            case 'group':
-                return <NavGroup key={item.id} item={item} />;
-            default:
-                return (
-                    <Typography key={item.id} variant="h6" color="error" align="center">
-                        Menu Items Error
-                    </Typography>
-                );
-        }
-    });
+    const [navItems, setNavItems] = useState();
 
-    return <>{navItems}</>;
+    useEffect(() => {
+        userService.getById(getUserIdLocal()).then((result) => {
+            console.log(result.data.data.type);
+            if (result.data.data.type === 'ADM') {
+                const navItems = getMenuItemsAdm().items.map((item) => {
+                    switch (item.type) {
+                        case 'group':
+                            return <NavGroup key={item.id} item={item} />;
+                        default:
+                            return (
+                                <Typography key={item.id} variant="h6" color="error" align="center">
+                                    Menu Items Error
+                                </Typography>
+                            );
+                    }
+                });
+                setNavItems(navItems);
+            } else {
+                const navItems = getMenuItemsDriver().items.map((item) => {
+                    switch (item.type) {
+                        case 'group':
+                            return <NavGroup key={item.id} item={item} />;
+                        default:
+                            return (
+                                <Typography key={item.id} variant="h6" color="error" align="center">
+                                    Menu Items Error
+                                </Typography>
+                            );
+                    }
+                });
+                setNavItems(navItems);
+            }
+        });
+    }, []);
+
+    return <>{navItems || <Loader />}</>;
 };
 
 export default MenuList;

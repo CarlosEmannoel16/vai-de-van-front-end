@@ -1,10 +1,17 @@
 import dashboard from './dashboard';
 import pages from './pages';
-import routes from './routers';
+import { routesAdm, routesDriver } from './routers';
 import drivers from './drivers';
 
-const menuItems = {
-    items: [dashboard, pages, routes, drivers]
+const getMenuItemsAdm = () => {
+    return {
+        items: [dashboard, pages, routesAdm, drivers]
+    };
+};
+const getMenuItemsDriver = () => {
+    return {
+        items: [dashboard, pages, routesDriver]
+    };
 };
 
-export default menuItems;
+export { getMenuItemsAdm, getMenuItemsDriver };

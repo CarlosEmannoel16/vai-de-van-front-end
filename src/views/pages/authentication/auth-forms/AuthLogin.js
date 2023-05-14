@@ -1,45 +1,19 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-
-// material-ui
 import { useTheme } from '@mui/material/styles';
-import {
-    Box,
-    Button,
-    Checkbox,
-    Divider,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    Grid,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    OutlinedInput,
-    Stack,
-    Typography,
-    useMediaQuery
-} from '@mui/material';
+import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 
-// third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-
-// project imports
+import { AuthLogin } from 'services/auth';
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-
-// assets
+import { useNavigate } from 'react-router';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-const FirebaseLogin = ({ ...others }) => {
+const FirebaseLogin = () => {
     const theme = useTheme();
     const scriptedRef = useScriptRef();
-    const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-    const customization = useSelector((state) => state.customization);
-    const [checked, setChecked] = useState(true);
-
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -49,12 +23,20 @@ const FirebaseLogin = ({ ...others }) => {
         event.preventDefault();
     };
 
+    const persistDataUser = (token, id, name) => {
+        console.log(id);
+        localStorage.setItem('idLogin', id);
+        localStorage.setItem('token', token);
+        localStorage.setItem('nameUser', name);
+    };
+
+    const navigate = useNavigate();
     return (
         <>
             <Formik
                 initialValues={{
-                    email: 'exemplo@email.com.com',
-                    password: '123456',
+                    email: '',
+                    password: '',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
@@ -65,20 +47,28 @@ const FirebaseLogin = ({ ...others }) => {
                     try {
                         if (scriptedRef.current) {
                             setStatus({ success: true });
-                            setSubmitting(false);
+                            const loginService = new AuthLogin();
+                            const result = await loginService.login(values);
+                            if (result) {
+                                const { id, name } = result.data.user;
+                                console.log(result.data);
+                                persistDataUser(result.data.token, id, name);
+                                navigate('/');
+                            }
+                            setSubmitting(true);
                         }
                     } catch (err) {
-                        console.error(err);
+                        console.error();
                         if (scriptedRef.current) {
                             setStatus({ success: false });
-                            setErrors({ submit: err.message });
+                            setErrors({ submit: err.response.data.message });
                             setSubmitting(false);
                         }
                     }
                 }}
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-                    <form noValidate onSubmit={handleSubmit} {...others}>
+                    <form noValidate onSubmit={handleSubmit}>
                         <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
                             <InputLabel htmlFor="outlined-adornment-email-login">Email/ login</InputLabel>
                             <OutlinedInput
@@ -133,11 +123,7 @@ const FirebaseLogin = ({ ...others }) => {
                                 </FormHelperText>
                             )}
                         </FormControl>
-                        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-                            <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-                                Esqueceu a senha?
-                            </Typography>
-                        </Stack>
+
                         {errors.submit && (
                             <Box sx={{ mt: 3 }}>
                                 <FormHelperText error>{errors.submit}</FormHelperText>

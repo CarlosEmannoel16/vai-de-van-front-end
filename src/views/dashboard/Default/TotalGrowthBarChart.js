@@ -33,8 +33,6 @@ const status = [
     }
 ];
 
-// ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
-
 const TotalGrowthBarChart = ({ isLoading }) => {
     const [value, setValue] = useState('today');
     const theme = useTheme();
