@@ -32,7 +32,7 @@ export default function ConfirmModal({ title, open, setOpen, setSubmitDelete }) 
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         <Button color="error" variant="outlined" size="small" onClick={() => setSubmitDelete(true)}>
-                            Deletar
+                            Sim
                         </Button>
                         <Button variant="outlined" size="small" onClick={() => handleClose()}>
                             Cancelar

@@ -3,19 +3,12 @@ const icons = { IconUserSearch, IconUserPlus };
 const drivers = {
     id: 'sample-docs-roadmap',
     type: 'group',
-    title: 'Motoristas',
+    caption: '',
+    title: '',
     children: [
         {
-            id: 'sample-page',
-            title: 'Novo',
-            type: 'item',
-            url: '/add-driver',
-            icon: icons.IconUserPlus,
-            breadcrumbs: false
-        },
-        {
             id: 'drivers',
-            title: 'Listar',
+            title: 'Motoristas',
             type: 'item',
             url: '/drivers',
             icon: icons.IconUserSearch,

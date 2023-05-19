@@ -3,20 +3,26 @@ import { useLocation, useNavigate } from 'react-router';
 import { userService } from 'services/driver';
 import Loader from 'ui-component/Loader';
 
-export default function RoutesPrivate({ children }) {
-    const [test, setTest] = useState(false);
+export default function RoutesPrivate({ children, adm }) {
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     userService
         .getById(window.localStorage.getItem('idLogin'))
         .then((data) => {
-            console.log(data.data);
-            setTest(true);
-            return children;
+            if (adm) {
+                if (data.data.data.type === 'ADM') {
+                    setLoading(false);
+                } else {
+                    navigate('/');
+                }
+            } else {
+                setLoading(false);
+            }
         })
         .catch(() => {
             navigate('/login/adm');
         });
 
-    return test ? children : <Loader />;
+    return <>{!loading ? children : <Loader />}</>;
 }

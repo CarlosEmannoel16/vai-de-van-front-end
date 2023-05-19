@@ -21,7 +21,9 @@ import { getUserIdLocal } from 'helpers/localStorage';
 import ConfirmModal from 'ui-component/modal/ConfirmModal';
 import MainCard from 'ui-component/cards/MainCard';
 import { useNavigate } from 'react-router';
-
+import { Stack } from '@mui/system';
+import { Link } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
 export default function ListDrivers() {
     const [rows, setRows] = useState([]);
     const [openModalDelete, serOpenModalDelete] = useState(false);
@@ -53,7 +55,7 @@ export default function ListDrivers() {
                 {
                     <ConfirmModal
                         setOpen={serOpenModalDelete}
-                        title={`Voce realmente deseja excluir o motorista ${row.name}`}
+                        title={`Voce realmente deseja excluir o motorista ${row.name}?`}
                         open={openModalDelete}
                         setSubmitDelete={setConfirmDelete}
                     />
@@ -65,24 +67,22 @@ export default function ListDrivers() {
                                 {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                             </IconButton>
                         </TableCell>
-                        <TableCell component="th" scope="row">
-                            {row.name}
-                        </TableCell>
-                        <TableCell align="right">{row.name}</TableCell>
-                        <TableCell align="right">{}</TableCell>
-                        <TableCell align="right">{row.cpf}</TableCell>
-                        <TableCell align="right">
+                        <TableCell align="left">{row.name}</TableCell>
+                        <TableCell align="left">{row.cnh}</TableCell>
+                        <TableCell align="left">{row.cpf}</TableCell>
+
+                        <TableCell align="left">
                             <Button variant="outlined" onClick={handleEdit} size="small">
                                 Editar
                             </Button>
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell align="left">
                             <IconButton aria-label="delete" size="small">
                                 <DeleteIcon htmlColor="red" fontSize="inherit" onClick={() => handleDelete()} />
                             </IconButton>
                         </TableCell>
                     </TableRow>
-                    <TableRow>
+                    <TableRow style={{ backgroundColor: '#0000' }}>
                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                             <Collapse in={open} timeout="auto" unmountOnExit>
                                 <Box sx={{ margin: 1 }}>
@@ -159,17 +159,24 @@ export default function ListDrivers() {
     }, []);
 
     return (
-        <MainCard title="Lista de Rotas">
+        <MainCard title="Motoristas">
+            <Stack spacing={2} direction="row">
+                <Link to="/add-driver">
+                    <Button variant="contained" endIcon={<AddIcon />}>
+                        Novo
+                    </Button>
+                </Link>
+            </Stack>
             <TableContainer component={Paper}>
                 <Table aria-label="collapsible table">
                     <TableHead>
                         <TableRow>
                             <TableCell />
-                            <TableCell>Nome</TableCell>
-                            <TableCell align="right">CNH</TableCell>
-                            <TableCell align="right">CPF</TableCell>
-                            <TableCell align="right">Editar</TableCell>
-                            <TableCell align="right">Excluir</TableCell>
+                            <TableCell align="left">Nome</TableCell>
+                            <TableCell align="left">CNH</TableCell>
+                            <TableCell align="left">CPF</TableCell>
+                            <TableCell align="left">Editar</TableCell>
+                            <TableCell align="left">Excluir</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>{rows.length ? rows.map((row, key) => <Row row={row} key={key}></Row>) : ''}</TableBody>

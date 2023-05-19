@@ -122,7 +122,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Chart {...chartData} />
+                            <Chart type="line" {...chartData} />
                         </Grid>
                     </Grid>
                 </MainCard>

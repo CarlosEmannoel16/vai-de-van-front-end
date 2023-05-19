@@ -13,7 +13,10 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import MainCard from 'ui-component/cards/MainCard';
-
+import { Stack } from '@mui/system';
+import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 function createData(name, status) {
     return {
         name,
@@ -112,12 +115,18 @@ const rows = [
 
 export default function ListRoutes() {
     return (
-        <MainCard title="Lista de Rotas">
+        <MainCard title="Rotas">
+            <Stack spacing={2} direction="row">
+                <Link to="/add-driver">
+                    <Button variant="contained" endIcon={<AddIcon />}>
+                        Novo
+                    </Button>
+                </Link>
+            </Stack>
             <TableContainer component={Paper}>
                 <Table aria-label="collapsible table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Subrotas</TableCell>
                             <TableCell>Origem/Destino</TableCell>
                             <TableCell>Status</TableCell>
                         </TableRow>
