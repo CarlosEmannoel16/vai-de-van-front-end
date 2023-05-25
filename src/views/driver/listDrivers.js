@@ -23,6 +23,8 @@ import MainCard from 'ui-component/cards/MainCard';
 import { useNavigate } from 'react-router';
 import { Stack } from '@mui/system';
 import { Link } from 'react-router-dom';
+import SettingsIcon from '@mui/icons-material/Settings';
+
 import AddIcon from '@mui/icons-material/Add';
 export default function ListDrivers() {
     const [rows, setRows] = useState([]);
@@ -62,18 +64,13 @@ export default function ListDrivers() {
                 }
                 <React.Fragment>
                     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                        <TableCell>
-                            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                            </IconButton>
-                        </TableCell>
                         <TableCell align="left">{row.name}</TableCell>
                         <TableCell align="left">{row.cnh}</TableCell>
                         <TableCell align="left">{row.cpf}</TableCell>
 
                         <TableCell align="left">
                             <Button variant="outlined" onClick={handleEdit} size="small">
-                                Editar
+                                <SettingsIcon />
                             </Button>
                         </TableCell>
                         <TableCell align="left">
@@ -82,59 +79,19 @@ export default function ListDrivers() {
                             </IconButton>
                         </TableCell>
                     </TableRow>
-                    <TableRow style={{ backgroundColor: '#0000' }}>
-                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                            <Collapse in={open} timeout="auto" unmountOnExit>
-                                <Box sx={{ margin: 1 }}>
-                                    <Typography variant="h6" gutterBottom component="div">
-                                        Veiculos deste motorista
-                                    </Typography>
-                                    <Table size="small" aria-label="purchases">
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>Modelo</TableCell>
-                                                <TableCell>Marca</TableCell>
-                                                <TableCell align="right">Acentos</TableCell>
-                                                <TableCell align="right">status</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {row.history.map((historyRow) => (
-                                                <TableRow key={historyRow.date}>
-                                                    <TableCell component="th" scope="row">
-                                                        {historyRow.date}
-                                                    </TableCell>
-                                                    <TableCell>{historyRow.customerId}</TableCell>
-                                                    <TableCell align="right">{historyRow.amount}</TableCell>
-                                                    <TableCell align="right">{historyRow.status}</TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </Box>
-                            </Collapse>
-                        </TableCell>
-                    </TableRow>
                 </React.Fragment>
             </>
         );
     }
 
-    function createData({ name, cpf, id, phone, email }) {
+    function createData({ name, cnh, cpf, id, phone, email }) {
         return {
             name,
             cpf,
             id,
+            cnh,
             phone,
-            email,
-            history: [
-                {
-                    date: 'Kombi',
-                    customerId: 'Fiat',
-                    amount: 12,
-                    status: 'Ativo'
-                }
-            ]
+            email
         };
     }
 
@@ -145,12 +102,13 @@ export default function ListDrivers() {
                     .getAll()
                     .then((result) => {
                         const users = result.data.data;
+                        console.log('users', users);
                         const row2 = [];
                         if (users.length)
                             users.map((user) => {
                                 console.log('==>', user);
-                                const { cpf, email, name, phone, id } = user;
-                                row2.push(createData({ name, cpf, id, phone, email }));
+                                const { cpf, email, name, phone, id } = user.User;
+                                row2.push(createData({ name, cnh: user.cnh, cpf, id, phone, email }));
                             });
                         setRows(row2);
                     })
@@ -171,7 +129,6 @@ export default function ListDrivers() {
                 <Table aria-label="collapsible table">
                     <TableHead>
                         <TableRow>
-                            <TableCell />
                             <TableCell align="left">Nome</TableCell>
                             <TableCell align="left">CNH</TableCell>
                             <TableCell align="left">CPF</TableCell>

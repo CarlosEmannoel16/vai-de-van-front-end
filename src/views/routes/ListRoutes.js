@@ -17,27 +17,34 @@ import { Stack } from '@mui/system';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { TimeLine } from 'components/timeline';
 function createData(name, status) {
     return {
         name,
         status,
         history: [
             {
-                origem: 'Cedro',
-                destino: 'Cascudo',
-                km: '14km',
+                destino: 'Iguatu',
+                km: 15,
+                color: 'yellow',
                 status: 'Ativo'
             },
             {
-                origem: 'Cedro',
-                destino: 'Cascudo',
-                km: '14km',
+                destino: 'Gadelha',
+                km: 25,
+                color: 'green',
                 status: 'Ativo'
             },
             {
-                origem: 'Cedro',
-                destino: 'Cascudo',
-                km: '14km',
+                destino: 'Umarizeira',
+                km: 4,
+                color: 'black',
+                status: 'Ativo'
+            },
+            {
+                destino: 'Caipu',
+                km: 19,
+                color: 'pink',
                 status: 'Ativo'
             }
         ]
@@ -47,7 +54,7 @@ function createData(name, status) {
 function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
-
+    let totalKms = 0;
     return (
         <React.Fragment>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -81,17 +88,20 @@ function Row(props) {
                                 </TableHead>
                                 <TableBody>
                                     {row.history.map((historyRow) => (
-                                        <TableRow key={historyRow.date}>
-                                            <TableCell component="th" scope="row">
-                                                {historyRow.origem}
-                                            </TableCell>
-                                            <TableCell>{historyRow.destino}</TableCell>
-                                            <TableCell align="right">{historyRow.km}</TableCell>
-                                            <TableCell align="right">{historyRow.status}</TableCell>
-                                        </TableRow>
+                                        <>
+                                            {(totalKms += historyRow.km)}
+                                            <TableRow key={historyRow.date}>
+                                                <TableCell component="th" scope="row">
+                                                    {historyRow.origem}
+                                                </TableCell>
+                                                <TableCell align="right">{historyRow.km}</TableCell>
+                                                <TableCell align="right">{historyRow.status}</TableCell>
+                                            </TableRow>
+                                        </>
                                     ))}
                                 </TableBody>
                             </Table>
+                            <TimeLine subRoutes={row.history} total={totalKms} />
                         </Box>
                     </Collapse>
                 </TableCell>

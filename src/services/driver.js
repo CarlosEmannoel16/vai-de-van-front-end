@@ -6,6 +6,10 @@ class ServiceDriverAnUsers {
         return await axios.post(`${config.baseUrl}/user/driver`, data, { headers: { Authorization: `Bearer ${getTokenUserLocal()}` } });
     }
 
+    async update(data) {
+        return await axios.put(`${config.baseUrl}/user/driver`, data, { headers: { Authorization: `Bearer ${getTokenUserLocal()}` } });
+    }
+
     async getAll() {
         return await axios.get(`${config.baseUrl}/users`, { headers: { Authorization: `Bearer ${getTokenUserLocal()}` } });
     }

@@ -1,28 +1,43 @@
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
-
+import moment from 'moment';
+import {
+    Box,
+    Button,
+    Divider,
+    FormControl,
+    FormHelperText,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    OutlinedInput,
+    Tooltip
+} from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { userService } from 'services/driver';
 import ActionAlerts from 'ui-component/AlertSucess/AlertSucess';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import Loader from 'ui-component/Loader';
-
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import FormVechicle from './formAddTravel';
 const FormAddDriver = () => {
     const { idUser } = useParams();
     const [user, setUser] = useState();
     const [sucess, setSucess] = useState(false);
     const [isEdit, setIsEdit] = useState();
 
+    const [travels, setTravels] = useState([]);
     const theme = useTheme();
+    const navigate = useNavigate();
     const scriptedRef = useScriptRef();
     useEffect(() => {
         if (idUser) {
             userService.getById(idUser).then((result) => {
+                console.log('User=>', result.data.data);
                 setUser(result.data.data);
                 setIsEdit(true);
             });
@@ -31,20 +46,40 @@ const FormAddDriver = () => {
         }
     }, [idUser]);
 
+    useEffect(() => {
+        if (sucess) {
+            setTimeout(() => {
+                navigate('/drivers');
+            }, 900);
+        }
+    }, [sucess]);
+
     let initialValues = {
+        id: idUser && user ? idUser : '',
+        type: idUser && user ? user.type : '',
         email: idUser && user ? user.email : '',
         name: idUser && user ? user.name : '',
-        cnh: idUser && user ? user.cnh : '',
-        date_of_birth: idUser && user ? new Date(user.date_of_birth) : '',
+        cnh: idUser && user ? user.Driver[0].cnh : '',
+        date_of_birth: idUser && user ? moment(new Date(user.date_of_birth)).format('yyyy-MM-DD') : moment(new Date()).format('yyyy-MM-DD'),
         password: idUser && user ? user.password : '',
         phone: idUser && user ? user.phone : '',
-        cpf: idUser && user ? user.cpf : ''
+        cpf: idUser && user ? user.cpf : '',
+        cnhExpirationDate:
+            idUser && user
+                ? moment(new Date(user.Driver[0].cnhExpirationDate)).format('yyyy-MM-DD')
+                : moment(new Date()).format('yyyy-MM-DD'),
+
+        cnhDateOfIssue:
+            idUser && user ? moment(new Date(user.Driver[0].cnhDateOfIssue)).format('yyyy-MM-DD') : moment(new Date()).format('yyyy-MM-DD')
     };
+    console.log(initialValues);
     return (
         <>
             {isEdit ? (
                 <>
-                    {sucess ? <ActionAlerts message="Cadastro realizado com sucesso!" isOpen={true} /> : null}
+                    {sucess ? (
+                        <ActionAlerts message={`${!idUser ? 'Cadastrado Realizado' : 'Atualizacao Efetuada'}`} isOpen={true} />
+                    ) : null}
                     <Formik
                         initialValues={initialValues}
                         validationSchema={Yup.object().shape({
@@ -59,7 +94,15 @@ const FormAddDriver = () => {
                             try {
                                 if (scriptedRef.current) {
                                     setStatus({ success: true });
-                                    const data = await userService.create(values);
+                                    let data;
+                                    if (!idUser) {
+                                        let valuesData = values;
+                                        delete valuesData.id;
+                                        data = await userService.create(valuesData);
+                                    } else {
+                                        data = await userService.update(values);
+                                    }
+
                                     if (data) {
                                         setStatus({ success: true });
                                         setSucess(true);
@@ -79,6 +122,8 @@ const FormAddDriver = () => {
                     >
                         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
                             <form noValidate onSubmit={handleSubmit}>
+                                <h3>Dados da Conta</h3>
+                                <Divider />
                                 <div>
                                     <FormControl
                                         fullWidth
@@ -103,6 +148,7 @@ const FormAddDriver = () => {
                                         )}
                                     </FormControl>
                                 </div>
+
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
                                     <FormControl
                                         style={{ width: '48%' }}
@@ -123,53 +169,6 @@ const FormAddDriver = () => {
                                         {touched.email && errors.email && (
                                             <FormHelperText error id="email-driver">
                                                 {errors.email}
-                                            </FormHelperText>
-                                        )}
-                                    </FormControl>
-
-                                    <FormControl
-                                        style={{ width: '48%' }}
-                                        error={Boolean(touched.cnh && errors.cnh)}
-                                        sx={{ ...theme.typography.customInput }}
-                                    >
-                                        <InputLabel htmlFor="cnh-driver">CNH*</InputLabel>
-                                        <OutlinedInput
-                                            id="cnh-driver"
-                                            type="text"
-                                            value={values.cnh}
-                                            name="cnh"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            label="cnh"
-                                            inputProps={{}}
-                                        />
-                                        {touched.cnh && errors.cnh && (
-                                            <FormHelperText error id="cnh-driver">
-                                                {errors.cnh}
-                                            </FormHelperText>
-                                        )}
-                                    </FormControl>
-                                </div>
-                                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-                                    <FormControl
-                                        style={{ width: '48%' }}
-                                        error={Boolean(touched.date_of_birth && errors.date_of_birth)}
-                                        sx={{ ...theme.typography.customInput }}
-                                        variant={'outlined'}
-                                    >
-                                        <InputLabel htmlFor="email-driver">Data de Nascimento*</InputLabel>
-                                        <OutlinedInput
-                                            id="email-drive"
-                                            type="date"
-                                            name="date_of_birth"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            label="date_of_birth"
-                                            inputProps={{}}
-                                        />
-                                        {touched.date_of_birth && errors.date_of_birth && (
-                                            <FormHelperText error id="email-driver">
-                                                {errors.date_of_birth}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -196,31 +195,103 @@ const FormAddDriver = () => {
                                         )}
                                     </FormControl>
                                 </div>
+                                <h3>Documentos</h3>
+                                <Divider />
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
                                     <FormControl
-                                        style={{ width: '48%' }}
-                                        error={Boolean(touched.phone && errors.phone)}
+                                        style={{ width: '30%' }}
+                                        error={Boolean(touched.cnh && errors.cnh)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="phone-driver">Telefone*</InputLabel>
+                                        <InputLabel htmlFor="cnh-driver">CNH*</InputLabel>
                                         <OutlinedInput
-                                            id="phone-driver"
+                                            id="cnh-driver"
                                             type="text"
-                                            value={values.phone}
-                                            name="phone"
+                                            value={values.cnh}
+                                            name="cnh"
                                             onBlur={handleBlur}
                                             onChange={handleChange}
-                                            label="phone"
+                                            label="cnh"
                                             inputProps={{}}
                                         />
-                                        {touched.phone && errors.phone && (
-                                            <FormHelperText error id="phone-driver">
-                                                {errors.phone}
+                                        {touched.cnh && errors.cnh && (
+                                            <FormHelperText error id="cnh-driver">
+                                                {errors.cnh}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
                                     <FormControl
-                                        style={{ width: '48%' }}
+                                        style={{ width: '30%' }}
+                                        error={Boolean(touched.date_of_birth && errors.date_of_birth)}
+                                        sx={{ ...theme.typography.customInput }}
+                                        variant={'outlined'}
+                                    >
+                                        <InputLabel htmlFor="cnhDateOfIssue-drive">Data de Emsissao*</InputLabel>
+                                        <OutlinedInput
+                                            id="cnhDateOfIssue-drive"
+                                            type="date"
+                                            name="date_of_birth"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            label="cnhDateOfIssue-drive"
+                                            value={values.cnhDateOfIssue}
+                                            defaultValue={values.cnhDateOfIssue}
+                                        />
+                                        {touched.date_of_birth && errors.date_of_birth && (
+                                            <FormHelperText error id="cnhDateOfIssue-drive">
+                                                {errors.date_of_birth}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                    <FormControl
+                                        style={{ width: '30%' }}
+                                        error={Boolean(touched.cnhExpirationDate && errors.cnhExpirationDate)}
+                                        sx={{ ...theme.typography.customInput }}
+                                        variant={'outlined'}
+                                    >
+                                        <InputLabel htmlFor="cnhDateOfIssue-drive">Data de Expiracao*</InputLabel>
+                                        <OutlinedInput
+                                            id="cnhDateOfIssue-drive"
+                                            type="date"
+                                            name="date_of_birth"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            label="cnhDateOfIssue"
+                                            value={values.cnhExpirationDate}
+                                            defaultValue={values.cnhExpirationDate}
+                                        />
+                                        {touched.cnhExpirationDate && errors.cnhExpirationDate && (
+                                            <FormHelperText error id="cnhDateOfIssue-drive">
+                                                {errors.date_of_birth}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </div>
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+                                    <FormControl
+                                        style={{ width: '30%' }}
+                                        error={Boolean(touched.date_of_birth && errors.date_of_birth)}
+                                        sx={{ ...theme.typography.customInput }}
+                                        variant={'outlined'}
+                                    >
+                                        <InputLabel htmlFor="email-driver">Data de Nascimento*</InputLabel>
+                                        <OutlinedInput
+                                            id="email-drive"
+                                            type="date"
+                                            name="date_of_birth"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            label="date_of_birth"
+                                            value={values.date_of_birth}
+                                        />
+                                        {touched.date_of_birth && errors.date_of_birth && (
+                                            <FormHelperText error id="email-driver">
+                                                {errors.date_of_birth}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                    <FormControl
+                                        style={{ width: '30%' }}
                                         error={Boolean(touched.cpf && errors.cpf)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
@@ -241,7 +312,30 @@ const FormAddDriver = () => {
                                             </FormHelperText>
                                         )}
                                     </FormControl>
+                                    <FormControl
+                                        style={{ width: '30%' }}
+                                        error={Boolean(touched.phone && errors.phone)}
+                                        sx={{ ...theme.typography.customInput }}
+                                    >
+                                        <InputLabel htmlFor="phone-driver">Telefone*</InputLabel>
+                                        <OutlinedInput
+                                            id="phone-driver"
+                                            type="text"
+                                            value={values.phone}
+                                            name="phone"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            label="phone"
+                                            inputProps={{}}
+                                        />
+                                        {touched.phone && errors.phone && (
+                                            <FormHelperText error id="phone-driver">
+                                                {errors.phone}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
                                 </div>
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}></div>
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'right' }}>
                                     <Box sx={{ mt: 2 }}>
                                         <AnimateButton>
@@ -253,11 +347,30 @@ const FormAddDriver = () => {
                                                 variant="contained"
                                                 color="primary"
                                             >
-                                                {idUser ? 'Editar  Motorista' : 'Cadastrar Motorista'}
+                                                {idUser ? 'Editar  Usuário' : 'Cadastrar Usuário'}
                                             </Button>
                                         </AnimateButton>
                                     </Box>
                                 </div>
+                                {idUser ? (
+                                    <>
+                                        <h3>Veiculos</h3>
+                                        <Divider />
+                                        <Tooltip title="Adicionar um novo veiculo">
+                                            <Button
+                                                onClick={() => {
+                                                    setTravels([...travels, 1]);
+                                                    console.log(travels);
+                                                }}
+                                            >
+                                                Novo Veiculo
+                                            </Button>
+                                        </Tooltip>
+                                        {travels.length > 0 ? <FormVechicle /> : <>'Esse usuário náo possui nenhum veiculo'</>}
+                                    </>
+                                ) : (
+                                    ''
+                                )}
                             </form>
                         )}
                     </Formik>

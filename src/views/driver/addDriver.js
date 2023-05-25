@@ -19,7 +19,7 @@ const AddDrivers = () => {
     }, []);
 
     return (
-        <MainCard title={!isEdit ? `Adicionar Novo Motorista` : `Editando ${user.name}`}>
+        <MainCard title={!isEdit ? `Criar Novo Usuário` : `Editando ${user.name}`}>
             <FormAddDriver />
         </MainCard>
     );
