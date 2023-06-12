@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
+    Divider,
     FormControl,
     FormHelperText,
     IconButton,
@@ -24,6 +25,7 @@ import { useEffect } from 'react';
 import Loader from 'ui-component/Loader';
 import TimePickerValue from 'ui-component/hourInput/InputHour';
 import MainCard from 'ui-component/cards/MainCard';
+import { TimeLine } from 'components/timeline';
 
 const AddRoutes = () => {
     const { idUser } = useParams();
@@ -56,6 +58,7 @@ const AddRoutes = () => {
     return (
         <>
             <MainCard>
+                <h3>Adicionar Paradas</h3>
                 {isEdit ? (
                     <>
                         {sucess ? <ActionAlerts message="Cadastro realizado com sucesso!" isOpen={true} /> : null}
@@ -210,6 +213,9 @@ const AddRoutes = () => {
                 ) : (
                     <Loader />
                 )}
+                <Divider />
+                <h3>Adicionar Paradas</h3>
+                <TimeLine total={300} subRoutes={[]} />
             </MainCard>
         </>
     );

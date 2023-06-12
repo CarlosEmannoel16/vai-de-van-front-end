@@ -22,15 +22,17 @@ import ActionAlerts from 'ui-component/AlertSucess/AlertSucess';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import Loader from 'ui-component/Loader';
-import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import FormVechicle from './formAddTravel';
+import FormVechicle from './formAddVehicle';
+import ListVehicles from '../vehicles/listVehicles';
 const FormAddDriver = () => {
     const { idUser } = useParams();
     const [user, setUser] = useState();
     const [sucess, setSucess] = useState(false);
     const [isEdit, setIsEdit] = useState();
+    const [vechicleForm, setVechicleForm] = useState(false);
+    const [updatedTableVehicle, setUpdatedTableVechicle] = useState(false);
 
-    const [travels, setTravels] = useState([]);
+    const [vehicle, setVehicle] = useState([]);
     const theme = useTheme();
     const navigate = useNavigate();
     const scriptedRef = useScriptRef();
@@ -39,12 +41,13 @@ const FormAddDriver = () => {
             userService.getById(idUser).then((result) => {
                 console.log('User=>', result.data.data);
                 setUser(result.data.data);
+                setVehicle(result.data.data.Vehicle);
                 setIsEdit(true);
             });
         } else {
             setIsEdit(true);
         }
-    }, [idUser]);
+    }, [idUser, updatedTableVehicle]);
 
     useEffect(() => {
         if (sucess) {
@@ -352,28 +355,32 @@ const FormAddDriver = () => {
                                         </AnimateButton>
                                     </Box>
                                 </div>
-                                {idUser ? (
-                                    <>
-                                        <h3>Veiculos</h3>
-                                        <Divider />
-                                        <Tooltip title="Adicionar um novo veiculo">
-                                            <Button
-                                                onClick={() => {
-                                                    setTravels([...travels, 1]);
-                                                    console.log(travels);
-                                                }}
-                                            >
-                                                Novo Veiculo
-                                            </Button>
-                                        </Tooltip>
-                                        {travels.length > 0 ? <FormVechicle /> : <>'Esse usuário náo possui nenhum veiculo'</>}
-                                    </>
-                                ) : (
-                                    ''
-                                )}
                             </form>
                         )}
                     </Formik>
+                    {idUser ? (
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <h3>Veiculos</h3>
+                            <Divider />
+                            <Tooltip title="Adicionar um novo veiculo">
+                                <Button
+                                    onClick={() => {
+                                        setVechicleForm(true);
+                                    }}
+                                >
+                                    Novo Veiculo
+                                </Button>
+                            </Tooltip>
+                            {vechicleForm ? (
+                                <FormVechicle updatedTable={setUpdatedTableVechicle} updateFormVehicle={setVechicleForm} />
+                            ) : (
+                                ''
+                            )}
+                            {vehicle.length > 0 ? <ListVehicles vehicles={vehicle} /> : 'Este Usuário nao possui nenhum veiculo'}
+                        </div>
+                    ) : (
+                        ''
+                    )}
                 </>
             ) : (
                 <Loader />

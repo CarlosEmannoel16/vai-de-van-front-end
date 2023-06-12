@@ -126,7 +126,7 @@ const FirebaseLogin = () => {
 
                         {errors.submit && (
                             <Box sx={{ mt: 3 }}>
-                                <FormHelperText error>{errors.submit}</FormHelperText>
+                                <FormHelperText error>{'Email ou senha inválidos'}</FormHelperText>
                             </Box>
                         )}
 

@@ -8,16 +8,15 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import DeleteIcon from '@mui/icons-material/Delete';
 import MainCard from 'ui-component/cards/MainCard';
 import { Stack } from '@mui/system';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { TimeLine } from 'components/timeline';
+import EditIcon from '@mui/icons-material/Edit';
 function createData(name, status) {
     return {
         name,
@@ -58,52 +57,21 @@ function Row(props) {
     return (
         <React.Fragment>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                <TableCell>
-                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
                 <TableCell component="th" scope="row">
                     {row.name}
                 </TableCell>
                 <TableCell component="th" scope="row">
                     {row.status}
                 </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6" gutterBottom component="div">
-                                Sobrotas
-                            </Typography>
-                            <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Origem</TableCell>
-                                        <TableCell>Destino</TableCell>
-                                        <TableCell align="right">Km</TableCell>
-                                        <TableCell align="right">status</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {row.history.map((historyRow) => (
-                                        <>
-                                            {(totalKms += historyRow.km)}
-                                            <TableRow key={historyRow.date}>
-                                                <TableCell component="th" scope="row">
-                                                    {historyRow.origem}
-                                                </TableCell>
-                                                <TableCell align="right">{historyRow.km}</TableCell>
-                                                <TableCell align="right">{historyRow.status}</TableCell>
-                                            </TableRow>
-                                        </>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                            <TimeLine subRoutes={row.history} total={totalKms} />
-                        </Box>
-                    </Collapse>
+                <TableCell align="left">
+                    <IconButton variant="outlined" onClick={() => {}} size="small">
+                        <EditIcon />
+                    </IconButton>
+                </TableCell>
+                <TableCell align="left">
+                    <IconButton aria-label="delete" size="small">
+                        <DeleteIcon htmlColor="red" fontSize="inherit" onClick={() => {}} />
+                    </IconButton>
                 </TableCell>
             </TableRow>
         </React.Fragment>
@@ -127,7 +95,7 @@ export default function ListRoutes() {
     return (
         <MainCard title="Rotas">
             <Stack spacing={2} direction="row">
-                <Link to="/add-driver">
+                <Link to="/create-routes">
                     <Button variant="contained" endIcon={<AddIcon />}>
                         Novo
                     </Button>
@@ -137,8 +105,10 @@ export default function ListRoutes() {
                 <Table aria-label="collapsible table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Origem/Destino</TableCell>
-                            <TableCell>Status</TableCell>
+                            <TableCell>Origem</TableCell>
+                            <TableCell>Destino</TableCell>
+                            <TableCell>Editar</TableCell>
+                            <TableCell>Excluir</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
